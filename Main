@@ -1,0 +1,25 @@
+package org.jibble.pircbot;
+import org.jibble.pircbot.*;
+
+    public class BotClass extends PircBot{
+    	
+ //   	public BotClass(String name){
+ //   		setName(name);	
+
+  //  	}      
+        public static void main(String[] args) throws Exception {
+        	 Cerebro bot = new Cerebro("wall0t");
+          //  BotClass bot = new BotClass("wall0t");
+            try{
+            bot.setVerbose(true);
+            bot.connect("irc.ptnet.org");
+            bot.identifyBOT("NickServ identify minhapass" );
+            bot.joinChannel("meucanal");
+            bot.joinChannel("meucanal");
+ 			
+            }
+    		catch (Exception e){e.printStackTrace();}
+    	}
+
+    }
+
