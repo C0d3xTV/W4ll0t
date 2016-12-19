@@ -1,0 +1,192 @@
+package org.jibble.pircbot;
+
+import org.jibble.pircbot.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.jibble.jmegahal.*;
+
+public class Cerebro extends PircBot {
+    
+    private String name;
+    private JMegaHal hal;
+    
+    public Cerebro(String name) {
+        setName(name);
+        hal = new JMegaHal( );
+        // We need to teach it a few things first...
+        hal.add("Ola, o meu nome é wall0t. Sou um bot criado pelo arquitecto m4dd0x");
+        hal.add("Gosto de falar no IRC.");
+        hal.add("Sim, sou um tipo bem parecido.Queres tcl?");
+        hal.add("Não sei do que estás a falar.");
+        hal.add("Bem, assim de repente sinceramente não sei.");
+        hal.add("Pensava que era único neste universo :D");
+        hal.add("Uma boa conversa interessa-me sempre, queres tcl?");
+        hal.add("Dizem que fui criado por ALIENS, será verdade?..");
+        // (The more sentences we add, the more
+        //  sense we will get out of it!)
+
+        // Make JMegaHal generate a sentence.
+        String sentence1 = hal.getSentence();
+
+        // make JMegaHal generate another sentence,
+        // with the word "jibble" in it (if possible).
+        String sentence2 = hal.getSentence("jibble");
+        
+    }
+    
+    // ####################### FALA BOT #####################################
+    
+    public void onMessage(String channel, String sender,
+            String login, String hostname, String message) throws IOException {
+    	
+    	if (message.toLowerCase().indexOf("hi") != -1 || message.toLowerCase().indexOf("ola") != -1){
+			String fala = randomFala("cerebro/ola.txt");
+            sendMessage (channel, fala);
+        }
+    	if (message.toLowerCase().indexOf("gostas de") != -1 || message.toLowerCase().indexOf("preferes") != -1 || message.toLowerCase().indexOf("gostos") != -1){
+			String fala = randomFala("cerebro/prefGostos.txt");
+            sendMessage (channel, fala);
+        }
+		if (message.toLowerCase().indexOf("bye") != -1 || message.toLowerCase().indexOf("xau") != -1 || message.toLowerCase().indexOf("vou bazar") != -1){
+			String fala = randomFala("cerebro/adeus.txt");
+            sendMessage (channel, fala);
+        }
+		if (message.toLowerCase().indexOf("tudo bem") != -1 || message.toLowerCase().indexOf("como estas") != -1 || message.toLowerCase().indexOf("estas fixe") != -1) {
+			String fala = randomFala("cerebro/tudobem.txt");
+            sendMessage (channel, fala);
+        }
+		if (message.toLowerCase().indexOf("sozinho") != -1 || message.toLowerCase().indexOf("abandonado") != -1 || message.toLowerCase().indexOf("perdido") != -1) {
+			String fala = randomFala("cerebro/sozinho.txt");
+            sendMessage (channel, fala);
+        }
+		if (message.toLowerCase().indexOf("bom dia") != -1 || message.toLowerCase().indexOf("abandonado") != -1 || message.toLowerCase().indexOf("perdido") != -1) {
+			String fala = randomFala("cerebro/bomdia.txt");
+            sendMessage (channel, fala);
+		}
+		if (message.toLowerCase().indexOf("cerebro/queres falar") != -1 || message.toLowerCase().indexOf("falar") != -1){
+			String fala = randomFala("cerebro/queresfalar.txt");
+            sendMessage (channel, fala);
+        }
+		if (message.toLowerCase().indexOf("futebol") != -1 || message.toLowerCase().indexOf("benfica") != -1 || message.toLowerCase().indexOf("sporting") != -1 || message.toLowerCase().indexOf("porto") != -1){
+			String fala = randomFala("cerebro/futebol.txt");
+            sendMessage (channel, fala);
+        }
+		if (message.toLowerCase().indexOf("novidades") != -1){
+			String fala = randomFala("cerebro/novidades.txt");
+            sendMessage (channel, fala);
+        }
+		if (message.equalsIgnoreCase("!time")) {
+			String time = new java.util.Date().toString();
+			sendMessage(channel, sender + ": My data base says it's " + time);
+		}
+		if (message.equalsIgnoreCase("!arquitecto")) {
+			sendMessage(channel, sender + ": m4dd0x create me ");
+		}
+        
+        if (message.toLowerCase( ).indexOf(getNick( ).toLowerCase( )) >= 0) {
+            // If the bot's nickname was mentioned, generate a random reply.
+            String sentence = hal.getSentence( );
+            sendMessage(channel, sentence);
+        }
+        if(message.equalsIgnoreCase("!cpuinfo")) 
+		{
+			Process p = Runtime.getRuntime().exec("cat /proc/cpuinfo");
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+			String line = null;
+			while ((line = in.readLine()) != null)
+				sendMessage(channel, line);
+		}
+		if(message.equalsIgnoreCase("!who")) 
+		{
+			Process p = Runtime.getRuntime().exec("who");
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+			String line = null;
+			while ((line = in.readLine()) != null)
+				sendMessage(channel, line);
+		}
+		if(message.equalsIgnoreCase("!sda")) 
+		{
+			Process p = Runtime.getRuntime().exec("lsblk");
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+			String line = null;
+			while ((line = in.readLine()) != null)
+				sendMessage(channel, line);
+		}
+		if(message.equalsIgnoreCase("!uptime")) 
+		{
+			Process p = Runtime.getRuntime().exec("uptime");
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+			String line = null;
+			while ((line = in.readLine()) != null)
+				sendMessage(channel, line);
+		}
+		if(message.equalsIgnoreCase("!calendario")) 
+		{
+			Process p = Runtime.getRuntime().exec("cal");
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+			String line = null;
+			while ((line = in.readLine()) != null)
+				sendMessage(channel, line);
+		}
+		if(message.equalsIgnoreCase("!help")) 
+		{	
+		 		String fala;
+		 		BufferedReader in = new BufferedReader(new FileReader("cerebro/help.txt"));
+		 		while ((fala = in.readLine()) != null) { 
+		 		sendMessage(sender, fala);
+		 		}
+        	   
+		}
+        else {
+            // Otherwise, make the bot learn the message.
+            hal.add(message);
+        }
+    } 
+	public void onPrivateMessage(String sender, String login, String hostname, String message)throws IOException {
+		 if(message.equalsIgnoreCase("!help")) 
+			{	
+			 		String fala;
+			 		BufferedReader in = new BufferedReader(new FileReader("cerebro/help.txt"));
+			 		while ((fala = in.readLine()) != null) { 
+			 		sendMessage(sender, fala);
+			 		}
+	        	   
+			}
+		if (message.toLowerCase().indexOf("hi") != -1 || message.toLowerCase().indexOf("ola") != -1){
+			String fala = randomFala("cerebro/ola.txt");
+			sendMessage(sender, fala);
+        }
+		if (message.toLowerCase().indexOf("bom dia") != -1 || message.toLowerCase().indexOf("ola") != -1){
+			String fala = randomFala("cerebro/bomdia.txt");
+			sendMessage(sender, fala);
+        }
+		if (message.toLowerCase().indexOf("bye") != -1 || message.toLowerCase().indexOf("xau") != -1){
+			String fala = randomFala("cerebro/adeus.txt");
+			sendMessage(sender, fala);
+        }
+		if (message.toLowerCase().indexOf("tudo bem") != -1){
+			String fala = randomFala("cerebro/tudobem.txt");
+			sendMessage(sender, fala);
+        }
+		if (message.toLowerCase().indexOf("novidades") != -1){
+			String fala = randomFala("cerebro/novidades.txt");
+			sendMessage(sender, fala);
+        }
+		if (message.toLowerCase().indexOf("dica") != -1){
+			String fala = randomFala("cerebro/dica.txt");
+			sendMessage(sender, fala);
+        } else {
+            // Otherwise, make the bot learn the message.
+            hal.add(message);
+        }
+	}
+}
